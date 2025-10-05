@@ -8,9 +8,11 @@ import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
 import { motion } from "framer-motion";
 import Speech from "speak-tts";
+import { Skeleton } from "./ui/skeleton";
+import { toast } from 'sonner';
 
 
-let speech: Speech = null;
+let speech = null as unknown as any;
 const initSpeech = async () => {
   if (typeof window === "undefined") return; // ⬅️ mencegah jalan di server
   if (!speech) {
@@ -24,12 +26,11 @@ const initSpeech = async () => {
         volume: 1,
         lang: "id-ID", // bahasa Indonesia
         rate: 1,
-        pitch: 1,
+        pitch: 0,
         // voice: "Google Bahasa Indonesia",
         splitSentences: true,
       });
-      await speech.setVoice("fiona");
-      console.log("Speech initialized", speech);
+      // await speech.setVoice("Google Bahasa Indonesia");
       
       return speech;
   } else {
@@ -37,27 +38,32 @@ const initSpeech = async () => {
   }
 };
 
-export type AntrianRow = {
+type Queue = {
   id: number;
-  antrian: string; // nomor antrian
+  nomorAntrian: string;
   jenisPelayanan: string;
   namaPemohon: string;
-  status: "menunggu" | "dipanggil" | "selesai" | string;
-};
+  status: string;
+  createdAt: string;
+}
 
 type Props = {
-  rows: Array<AntrianRow>;
-  className?: string;
+  rows: Array<Queue>,
+  isLoading: boolean,
+  className?: string,
+  isHeader?: boolean
+  refetch: () => Promise<void>,
 };
 
-export default function AntrianTable({ rows, className = "" }: Props) {
+export default function AntrianTable({ rows, isLoading, refetch ,isHeader = true, className = "" }: Props) {
   const [query, setQuery] = React.useState("");
+  const [disabled, setDisabled] = React.useState(false);
 
   const filtered = React.useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return rows;
     return rows.filter((r) =>
-      [String(r.id), r.antrian, r.jenisPelayanan, r.namaPemohon, r.status]
+      [String(r.id), r.nomorAntrian, r.jenisPelayanan, r.namaPemohon, r.status]
         .join(" ")
         .toLowerCase()
         .includes(q)
@@ -66,28 +72,23 @@ export default function AntrianTable({ rows, className = "" }: Props) {
 
   const statusToColor = (s: string) => {
     switch (s) {
-      case "menunggu":
+      case "Proses":
         return "bg-yellow-100 text-yellow-800";
-      case "dipanggil":
+      case "Siap":
         return "bg-blue-100 text-blue-800";
-      case "selesai":
+      case "Selesai":
         return "bg-green-100 text-green-800";
       default:
         return "bg-gray-100 text-gray-800";
     }
   };
   
-
-speech = 
   useEffect(() => {
     initSpeech()
   }, [])
-
   
-  const speakText = ( antrian: string, namaPemohon: string) => () => {
-    
+  const speakText = ( antrian: string, namaPemohon: string) => {
     if (typeof window === "undefined" || !speech) return;
-    console.log(speech,'<<<<<');
     const text = `Nomor Antrian ${antrian} atas nama ${namaPemohon}`;
     if (!speech.speaking()) {
       speech
@@ -95,8 +96,8 @@ speech =
           text,
           queue: false,
           listeners: {
-            onstart: () => console.log("Mulai bicara..."),
-            onend: () => console.log("Selesai bicara"),
+            onstart: () => setDisabled(true),
+            onend: () => setDisabled(false),
             onresume: () => console.log("Lanjut bicara"),
             onpause: () => console.log("Pause bicara"),
           },
@@ -104,11 +105,47 @@ speech =
         .catch((e: any) => console.error("TTS Error:", e));
     }
   };
+
+  const handleOnCall = (props: Queue) => async () => {
+    try {
+      const res = await fetch(`/api/queue/${props.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: 'Siap' }),
+      });
+      
+      toast.success('status telah diperbarui');
+
+      speakText(props.nomorAntrian, props.namaPemohon)
+      await refetch()
+    } catch (error) {
+      toast.error('status gagal diperbarui'||error);
+    }
+  }
+
+  const handleOnSuccess = (props: Queue) => async () => {
+    try {
+      const res = await fetch(`/api/queue/${props.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: 'Selesai' }),
+      });
+      
+      toast.success('status telah diperbarui');
+      
+      await refetch()
+    } catch (error) {
+      console.log(error);
+      
+      toast.error('status gagal diperbarui'||error);
+    }
+  }
+  
   
 
   return (
-    <Card className={`w-full ${className} border-0 shadow-none`}>
-      <CardHeader className="flex items-center border-0 justify-between gap-4 p-4">
+    <Card className={`w-full ${className} border-0 shadow-none p-0`}>
+      {isHeader && <CardHeader className="flex items-center border-0 justify-between gap-4 p-4">
         <div>
           <CardTitle className="text-lg border-0">Daftar Antrian</CardTitle>
         </div>
@@ -120,30 +157,30 @@ speech =
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Cari id, antrian, nama, atau status"
-              className="!border-0 shadow-none p-0 min-w-[220px]"
+              className="!border-0 shadow-none p-0 min-w-[220px] active:border-none"
             />
           </div>
-          <Button size="sm">Export</Button>
         </div>
-      </CardHeader>
+      </CardHeader>}
+      
 
       <CardContent className="p-0">
         <div className="overflow-x-auto">
           <table className="w-full text-left table-auto">
-            <thead className="bg-slate-50">
+            <thead className="bg-[#E6F0FA]">
               <tr>
-                <th className="px-4 py-3 text-sm font-medium">ID</th>
+                <th className="px-4 py-3 text-sm font-medium">No</th>
                 <th className="px-4 py-3 text-sm font-medium">Nomor Antrian</th>
                 <th className="px-4 py-3 text-sm font-medium">
                   Jenis Pelayanan
                 </th>
                 <th className="px-4 py-3 text-sm font-medium">Nama Pemohon</th>
                 <th className="px-4 py-3 text-sm font-medium">Status</th>
-                <th className="px-4 py-3 text-sm font-medium">Aksi</th>
+                {isHeader && <th className="px-4 py-3 text-sm font-medium">Aksi</th>}
               </tr>
             </thead>
             <tbody>
-              {filtered.length === 0 && (
+              {filtered.length === 0 && !isLoading && (
                 <tr>
                   <td
                     colSpan={6}
@@ -153,8 +190,23 @@ speech =
                   </td>
                 </tr>
               )}
+              
+              {isLoading && (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="px-4 py-6 text-center text-sm text-slate-500"
+                  >
+                    <Skeleton className="h-10 w-full mb-4"/>
+                    <Skeleton className="h-10 w-full mb-4"/>
+                    <Skeleton className="h-10 w-full mb-4"/>
+                    <Skeleton className="h-10 w-full mb-4"/>
+                    <Skeleton className="h-10 w-full mb-4"/>
+                  </td>
+                </tr>
+              )}
 
-              {filtered.map((row) => (
+              {filtered.map((row: Queue, idx: number) => (
                 <motion.tr
                   key={row.id}
                   initial={{ opacity: 0, y: 6 }}
@@ -162,9 +214,9 @@ speech =
                   transition={{ duration: 0.18 }}
                   className="border-b last:border-0 even:bg-white"
                 >
-                  <td className="px-4 py-3 align-middle text-sm">{row.id}</td>
+                  <td className="px-4 py-3 align-middle text-sm">{idx + 1}</td>
                   <td className="px-4 py-3 align-middle text-sm font-medium">
-                    {row.antrian}
+                    {row.nomorAntrian}
                   </td>
                   <td className="px-4 py-3 align-middle text-sm">
                     {row.jenisPelayanan}
@@ -172,31 +224,36 @@ speech =
                   <td className="px-4 py-3 align-middle text-sm">
                     {row.namaPemohon}
                   </td>
-                  <td className="px-4 py-3 align-middle text-sm">
-                    <span
-                      className={`inline-flex items-center gap-2 px-2 py-1 rounded-full text-xs font-medium ${statusToColor(
+                  <td className="px-4 py-3 align-middle text-sm text-center">
+                    <div className={`w-20 text-center rounded-full ${statusToColor(
                         row.status
-                      )}`}
+                      )}`}>
+                    <p
+                      className={`inline-flex items-center gap-2 px-2 py-1   text-xs font-medium `}
                     >
                       {row.status}
-                    </span>
+                    </p>
+
+                    </div>
                   </td>
-                  <td className="px-4 py-3 align-middle text-sm">
-                    {row.status === "menunggu" && (
+                  {isHeader && <td className="px-4 py-3 align-middle text-sm">
+                    {row.status === "Proses" && (
                       <div className="flex items-center gap-2">
                         <Button
+                          disabled={disabled}
                           variant="outline"
                           className="bg-blue-100 hover:bg-blue-200 hover:text-blue-800 text-blue-800"
                           size="sm"
-                          onClick={speakText(row.antrian, row.namaPemohon)}
+                          onClick={handleOnCall(row)}
                         >
-                          Panggil
+                          Siap
                         </Button>
                       </div>
                     )}
-                    {row.status === "dipanggil" && (
+                    {row.status === "Siap" && (
                       <div className="flex items-center gap-2">
                         <Button
+                          onClick={handleOnSuccess(row)}
                           variant="outline"
                           className="bg-green-100 text-green-800 hover:bg-green-200 hover:text-green-800"
                           size="sm"
@@ -204,11 +261,13 @@ speech =
                           Selesai
                         </Button>
                         <Button
+                          disabled={disabled}
+                          onClick={() => speakText(row.nomorAntrian, row.namaPemohon)}
                           variant="outline"
                           className="hover:bg-red-200 bg-red-100 text-red-800 hover:text-red-800 "
                           size="sm"
                         >
-                          Panggil Ulang
+                          Panggil
                         </Button>
                       </div>
                     )}
@@ -217,7 +276,7 @@ speech =
                       <Button size="sm">Lihat</Button>
                       <Button size="sm" variant="ghost">Panggil</Button>
                     </div> */}
-                  </td>
+                  </td>}
                 </motion.tr>
               ))}
             </tbody>

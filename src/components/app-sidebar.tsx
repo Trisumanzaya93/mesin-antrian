@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from "react"
 
 import { SearchForm } from "@/components/search-form"
@@ -20,40 +22,41 @@ const data = {
   versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
   navMain: [
     {
-      title: "Pelayanan",
-      url: "/admin",
+      title: "Dashboard Antrian",
       items: [
         {
-          title: "Form Pelayanan",
-          url: "/admin",
-          isActive:false
+          title: "Form Antrian",
+          url: "/dashboard/antrian",
+        },
+        {
+          title: "Setting Display",
+          url: "/dashboard/display",
         }
       ],
     },
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ ...props }: any) {
+  const [indexActive, setIndexActive] = React.useState(0)
+
   return (
     <Sidebar {...props}>
-      <SidebarHeader>
-        {/* <VersionSwitcher
-          versions={data.versions}
-          defaultVersion={data.versions[0]}
-        /> */}
-        {/* <SearchForm /> */}
-      </SidebarHeader>
-      <SidebarContent>
-        {/* We create a SidebarGroup for each parent. */}
+      <SidebarContent className="bg-[#E6F0FA]">
         {data.navMain.map((item) => (
           <SidebarGroup key={item.title}>
-            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
+            <SidebarGroupLabel className="text-[#37474F] text-lg font-bold mt-2">{item.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {item.items.map((item) => (
+                {item.items.map((item, idx) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={item.isActive}>
-                      <a href={item.url}>{item.title}</a>
+                    <SidebarMenuButton asChild isActive={indexActive === idx} className="font-semibold">
+                      <button onClick={() =>{
+                        setIndexActive(idx)
+                        console.log(props);
+                        
+                        props.router.push(item.url)
+                      }}>{item.title}</button>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

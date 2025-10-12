@@ -7,19 +7,23 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import { FileUpload } from "@/components/ui/file-upload";
+import { toast } from "sonner";
+
 
 export default function SettingDisplayPage() {
   const [image, setImage] = useState<string | null>(null);
+  const [file, setFile] = useState<File>();
   const [runningText, setRunningText] = useState("");
   const [settings, setSettings] = useState<{ key: string; value: string }[]>([
-    { key: "judul_display", value: "Antrian Pelayanan" },
+    // { key: "Data Penduduk", value: "1600 orang" },
   ]);
 
   const handleImageUpload = (files: File[]) => {
     const file = files?.[0];
     if (file) {
       const url = URL.createObjectURL(file);
-      
+      console.log(file);
+      setFile(file)
       setImage(url);
     }
   };
@@ -34,26 +38,75 @@ export default function SettingDisplayPage() {
     setSettings(newSettings);
   };
 
-  const handleSave = () => {
-    console.log("Saved:", { image, runningText, settings });
-    alert("Settings saved!");
+  const handleSave = () => async () => {
+    if (!file) return toast.error('input tidak boleh kosong');
+    const formData = new FormData();
+    formData.append("file", file);
+
+    await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    toast.success("sukses memperbarui video");
   };
+
+  const onSubmitDisplay = () => async () => {
+    const body = {
+      runningText,
+      content: settings,
+    };
+
+    const newBody = Object.entries(body)
+      .filter(([_, v]) => v != null && v !== "" && v.length !== 0)
+      .reduce(
+        (acc, [k, v]) => ({
+          ...acc,
+          [k]:v,
+        }),
+        {}
+      );
+      
+    await fetch("/api/display/setting", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...newBody
+      }),
+    });
+    
+    toast.success("sukses memperbarui display");
+    try {
+      
+    } catch (error) {
+      toast.error('gagal memperbarui display');
+      
+    }
+
+  }
 
   return (
     <div className="space-y-6 px-16 pt-16">
       {/* Upload Foto */}
       <Card>
         <CardHeader>
-          <CardTitle>Upload video</CardTitle>
+          <CardTitle>Upload Video</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <FileUpload onChange={handleImageUpload} />
+          <FileUpload onChange={handleImageUpload}  />
           {/* <Input type="file" accept="image/*" onChange={handleImageUpload} /> */}
-          {image && <img src={image} alt="Preview" className="w-40 rounded-md border" />}
+          {image && <video src={image} autoPlay muted className="w-full rounded-md border" />}
+          
+          <div className="flex gap-3 mt-4">
+            <Button onClick={handleSave()}>Simpan</Button>
+          </div>
+          
         </CardContent>
       </Card>
 
       {/* Running Text */}
+
+      {/* Form Table */}
       <Card>
         <CardHeader>
           <CardTitle>Text Berjalan</CardTitle>
@@ -65,21 +118,11 @@ export default function SettingDisplayPage() {
             onChange={(e) => setRunningText(e.target.value)}
           />
         </CardContent>
-      </Card>
-
-      {/* Form Table */}
-      <Card>
         <CardHeader>
           <CardTitle>Konten</CardTitle>
         </CardHeader>
         <CardContent>
           <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Key</TableHead>
-                <TableHead>Value</TableHead>
-              </TableRow>
-            </TableHeader>
             <TableBody>
               {settings.map((row, i) => (
                 <TableRow key={i}>
@@ -87,14 +130,14 @@ export default function SettingDisplayPage() {
                     <Input
                       value={row.key}
                       onChange={(e) => handleChange(i, "key", e.target.value)}
-                      placeholder="contoh: warna_background"
+                      placeholder="contoh: Data Penduduk"
                     />
                   </TableCell>
                   <TableCell>
                     <Input
                       value={row.value}
                       onChange={(e) => handleChange(i, "value", e.target.value)}
-                      placeholder="contoh: #1976D2"
+                      placeholder="contoh: 1500 orang"
                     />
                   </TableCell>
                 </TableRow>
@@ -104,7 +147,7 @@ export default function SettingDisplayPage() {
 
           <div className="flex gap-3 mt-4">
             <Button variant="outline" onClick={handleAddRow}>Tambah Baris</Button>
-            <Button onClick={handleSave}>Simpan</Button>
+            <Button onClick={onSubmitDisplay()}>Simpan</Button>
           </div>
         </CardContent>
       </Card>

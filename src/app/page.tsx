@@ -22,11 +22,7 @@ import { useRouter } from 'next/navigation';
 export default function Home() {
   const router = useRouter()
   return (
-    <div className="font-mono h-screen bg-white items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20"
-      style={{
-        
-        backgroundImage: `src('/siger.png')`,
-      }}
+    <div className="font-mono h-screen bg-[#E6F0FA] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20"
     >
       
       <Image
@@ -39,14 +35,21 @@ export default function Home() {
         />
       <p className="text-4xl font-bold text-[#1e293bff]">Sistem Antrian </p>
       <p className="text-4xl font-bold text-[#1e293bff] mb-16">Desa Negara Ratu </p>
-      <div className="w-full font-bold gap-28 flex justify-center text-white items-center">
-          <button onClick={() => router.push('/dashboard/antrian')} className="text-center text-xl border-gray-200 px-12 py-12 border-2 rounded-2xl shadow-xl bg-[#38bdf8ff]">
+      <div className="w-full font-bold gap-28 flex justify-center items-center">
+          <button onClick={() => router.push('/dashboard/antrian')} className="bg-[url('/siger.png')] relative bg-center bg-repeat bg-size-[60px] text-center text-xl border-gray-200 px-12 py-12 border-2 rounded-2xl shadow-xl bg-[#E6F0FA]">
+          <div className="absolute inset-0  bg-[#E6F0FA] opacity-70" />
+          <div className="z-10 relative text-black">
+
             <GrUserAdmin className="text-9xl mb-4"/>
             <p>Admin</p>
+          </div>
           </button>
-          <button onClick={() => router.push('/display')} className="text-center text-xl border-gray-200 border-2 px-12 py-12 rounded-2xl shadow-xl bg-[#38bdf8ff]">
+          <button onClick={() => router.push('/display')} className="bg-[url('/siger.png')] relative bg-center bg-repeat bg-size-[60px] text-center text-xl border-gray-200 border-2 px-12 py-12 rounded-2xl shadow-xl bg-[#E6F0FA]">
+          <div className="absolute inset-0  bg-[#E6F0FA] opacity-70" />
+          <div className="z-10 relative text-black">
           <FaTv className="text-9xl mb-4"/>
             <p>Display</p>
+          </div>
           </button>
       </div>
     </div>

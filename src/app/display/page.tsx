@@ -32,31 +32,10 @@ type Display = {
 export default function DisplayPage() {
   const [queues, setQueues] = useState<Queue[]>([]);
   const [antrian, setAntrian] = useState(0);
-  const [video, setVideo] = useState("asdasdsa");
+  const [video, setVideo] = useState("");
   const [display, setDisplay] = useState<Display>({
-    runningText: "text-berjalannnnnnn",
-    content: [
-      {
-        key: 'key',
-        value: 'value.'
-      },
-      {
-        key: 'Lorem Ipsum is',
-        value: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
-      },
-      {
-        key: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy',
-        value: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
-      },
-      {
-        key: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy',
-        value: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
-      },
-      {
-        key: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy',
-        value: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
-      },
-    ],
+    runningText: "",
+    content: {},
   });
   const [error, setError] = useState<string | null>(null);
   const [displayData, setDisplayData] = useState({
@@ -130,15 +109,15 @@ export default function DisplayPage() {
   };
 
   // // nanti bisa di-fetch dari API
-  // useEffect(() => {
-  //   fetchVideo();
-  // }, []);
+  useEffect(() => {
+    fetchVideo();
+  }, []);
 
-  // useEffect(() => {
-  //   // fetchQueues();
-  //   const interval = setInterval(fetchQueues, 15000); // update tiap 3 detik
-  //   return () => clearInterval(interval);
-  // }, []);
+  useEffect(() => {
+    // fetchQueues();
+    const interval = setInterval(fetchQueues, 15000); // update tiap 3 detik
+    return () => clearInterval(interval);
+  }, []);
 
   // const [isFullscreenEnabled, setIsFullscreenEnabled] = useState(false);
 
@@ -212,7 +191,7 @@ export default function DisplayPage() {
           <div className="max-h-full max-w-[25%] p-0 rounded-2xl overflow-hidden">
             {video && (
               <video
-                src='/video/video.mp4' // letakkan file di public/videos/display.mp4
+              src={`${video}?cacheBust=${Date.now()}`} // letakkan file di public/videos/display.mp4
                 autoPlay
                 muted
                 loop
@@ -260,7 +239,6 @@ export default function DisplayPage() {
               height={350}
             />
           </Card>
-
         </div>
         {/* Left (Image) */}
 

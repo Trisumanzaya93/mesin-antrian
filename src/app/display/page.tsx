@@ -32,10 +32,31 @@ type Display = {
 export default function DisplayPage() {
   const [queues, setQueues] = useState<Queue[]>([]);
   const [antrian, setAntrian] = useState(0);
-  const [video, setVideo] = useState("");
+  const [video, setVideo] = useState("asdasdsa");
   const [display, setDisplay] = useState<Display>({
-    runningText: "",
-    content: {},
+    runningText: "text-berjalannnnnnn",
+    content: [
+      {
+        key: 'key',
+        value: 'value.'
+      },
+      {
+        key: 'Lorem Ipsum is',
+        value: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
+      },
+      {
+        key: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy',
+        value: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
+      },
+      {
+        key: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy',
+        value: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
+      },
+      {
+        key: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy',
+        value: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.'
+      },
+    ],
   });
   const [error, setError] = useState<string | null>(null);
   const [displayData, setDisplayData] = useState({
@@ -109,15 +130,15 @@ export default function DisplayPage() {
   };
 
   // // nanti bisa di-fetch dari API
-  useEffect(() => {
-    fetchVideo();
-  }, []);
+  // useEffect(() => {
+  //   fetchVideo();
+  // }, []);
 
-  useEffect(() => {
-    // fetchQueues();
-    const interval = setInterval(fetchQueues, 15000); // update tiap 3 detik
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   // fetchQueues();
+  //   const interval = setInterval(fetchQueues, 15000); // update tiap 3 detik
+  //   return () => clearInterval(interval);
+  // }, []);
 
   // const [isFullscreenEnabled, setIsFullscreenEnabled] = useState(false);
 
@@ -176,91 +197,73 @@ export default function DisplayPage() {
       </header>
 
       {/* CONTENT */}
-      <main className="flex-1 grid grid-cols-6 row-span-4 gap-5 p-4 pt-8">
-        {/* Left (Image) */}
-
-        <Card className="col-span-1 bg-[#E6F0FA] flex p-0 justify-end items-end bg-[url('/siger.png')] relative bg-center bg-repeat bg-size-[60px]">
-        <div className="absolute inset-0  bg-[#E6F0FA] opacity-70" />
-          <Image
-            className="z-10 w-full min-h-full object-cover"
-            src="/bupati.png"
-            alt="logo"
-            width={500}
-            height={500}
-          />
-        </Card>
-        <Card className="col-span-2 overflow-hidden mr-10 p-0">
-          {video && (
-            <video
-              src={`${video}?cacheBust=${Date.now()}`} // letakkan file di public/videos/display.mp4
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="w-full h-full object-cover shadow-lg"
+      <main className="px-16">
+        <div className="flex justify-between items-center min-h-1/2 py-10">
+          <div className="w-[15%] p-3 bg-[#E6F0FA] flex justify-end items-end bg-[url('/siger.png')] relative bg-center bg-repeat bg-size-[60px]">
+            <div className="absolute inset-0  bg-[#E6F0FA] opacity-70" />
+            <Image
+              className="z-10 w-full object-cover"
+              src="/bupati.png"
+              alt="logo"
+              width={500}
+              height={500}
             />
-          )}
-        </Card>
-        {/* Right (Agenda) */}
+          </div>
+          <div className="max-h-full max-w-[25%] p-0 rounded-2xl overflow-hidden">
+            {video && (
+              <video
+                src='/video/video.mp4' // letakkan file di public/videos/display.mp4
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-full object-fit shadow-lg"
+              />
+            )}
+          </div>
+          {/* Right (Agenda) */}
 
-        <div className=" col-span-1 flex flex-col text-black py-10">
-          {/* dibagi dua sama data desa */}
-          {/* <Card className="h-1/2">
-            <CardContent className="w-full p-0 flex flex-col items-center h-1/2">
-              <h2 className="font-bold text-2xl">Data Desa</h2> */}
+          <div className="flex flex-col text-black rounded-lg overflow-hidden">
             <Carousel
-              className="w-full max-w-xs h-full"
+              className="w-full max-w-xs "
               plugins={[plugin.current]}
             >
-              <CarouselContent className="h-full">
+              <CarouselContent className="flex items-center">
                 {Array.isArray(display.content) &&
                   display.content.map((val, index) => (
-                    <CarouselItem key={index} className="h-full">
-                      <div className="p-1">
-                        <Card className="bg-transparent">
-                          <CardContent className="flex aspect-square items-center justify-center">
-                            <div className="w-full p-6 flex flex-col gap-6 justify-center  rounded-lg bg-white text-start">
-                              <h2 className="font-bold text-lg">{val.key}</h2>
-                              <h2 className="text-lg mt-auto ">{val.value}</h2>
-                            </div>
-                          </CardContent>
-                        </Card>
+                    <CarouselItem key={index} className="max-h-[450px] overflow-hidden">
+                      <div className="w-full max-h-full p-6 flex flex-col gap-6 justify-center rounded-lg bg-white text-start">
+                        <h2 className="font-bold text-lg text-center">{val.key}</h2>
+                        <h2 className="text-lg overflow-hidden">{val.value}</h2>
                       </div>
                     </CarouselItem>
                   ))}
               </CarouselContent>
-              {/* <CarouselPrevious />
-              <CarouselNext /> */}
             </Carousel>
-          {/* {Array.isArray(display.content) &&
-                display.content.map((val) => (
-                  <div className="w-full flex justify-center">
-                    <h2 className=" text-lg">{val.key} :</h2>
-                    <h2 className="text-lg ml-2">{val.value}</h2>
-                  </div>
-                ))}
-            </CardContent>
-          </Card> */}
-        </div>
-        <div className="col-span-1 bg-none py-10">
-          <div className="z-10 p-0 flex flex-col justify-center items-center h-full bg-white text-black rounded-lg">
-            <h2 className="font-bold text-2xl text-center">Nomor Antrian</h2>
-            <div className=" text-[300px] font-bold ">
-              <AnimatedNumber value={antrian}  />
+          </div>
+          <div className="w-[10%] h-full">
+            <div className="flex flex-col py-5 gap-3 justify-center items-center h-full bg-white text-black rounded-lg">
+              <h2 className="font-bold text-2xl text-center">Nomor Antrian</h2>
+              <div className=" text-9xl font-bold ">
+                <AnimatedNumber value={antrian} />
+              </div>
             </div>
           </div>
-        </div>
 
-        <Card className="col-span-1 bg-[#E6F0FA] flex justify-center items-center bg-[url('/siger.png')] relative bg-center bg-repeat bg-size-[60px] ">
-        <div className="absolute inset-0  bg-[#E6F0FA] opacity-70" />
-          <Image
-            className="z-10 w-full object-"
-            src="/camat.png"
-            alt="logo"
-            width={350}
-            height={350}
-          />
-        </Card>
+          <Card className="w-[15%] p-3 bg-[#E6F0FA] flex justify-center items-center bg-[url('/siger.png')] relative bg-center bg-repeat bg-size-[60px] ">
+            <div className="absolute inset-0  bg-[#E6F0FA] opacity-70" />
+            <Image
+              className="z-10 w-full object-cover"
+              src="/camat.png"
+              alt="logo"
+              width={350}
+              height={350}
+            />
+          </Card>
+
+        </div>
+        {/* Left (Image) */}
+
 
         <Card className="col-span-full max-h-70 overflow-hidden h-full p-4">
           <CardContent className="p-0">

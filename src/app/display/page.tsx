@@ -14,6 +14,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import Autoplay from "embla-carousel-autoplay";
+
 type Queue = {
   id: number;
   nomorAntrian: string;
@@ -158,17 +159,17 @@ export default function DisplayPage() {
       {/* HEADER */}
       <header className="bg-blue-900 py-3 px-6 text-center shadow-lg flex justify-center  rounded-b-2xl">
         <Image
-          className="mr-8 w-14 h-16 object-fit"
+          className="mr-8 w-[3vw] h-full object-fit"
           src="/Lampung_coa.png"
           alt="logo"
           width={65}
           height={40}
         />
         <div>
-          <h1 className="text-2xl font-bold tracking-wide uppercase">
+          <h1 className="text-[2vw] font-bold tracking-wide uppercase">
             PEMERINTAH DESA NEGARA RATU
           </h1>
-          <p className="text-sm opacity-80">
+          <p className="text-[1vw] opacity-80">
             Jl. LPTP NO. 1 Negararatu, Kec. Natar Kab. Lampung Selatan. Kode pos
             35362.
           </p>
@@ -176,9 +177,9 @@ export default function DisplayPage() {
       </header>
 
       {/* CONTENT */}
-      <main className="px-16">
-        <div className="flex justify-between items-center min-h-1/2 py-10">
-          <div className="w-[15%] p-3 bg-[#E6F0FA] flex justify-end items-end bg-[url('/siger.png')] relative bg-center bg-repeat bg-size-[60px]">
+      <main className="h-full">
+        <div className="flex justify-between items-center h-[50%] py-36 mx-16 ">
+          <div className="w-[25%] h-full p-3 bg-[#E6F0FA] flex justify-center items-center bg-[url('/siger.png')] relative bg-center bg-repeat bg-size-[60px]">
             <div className="absolute inset-0  bg-[#E6F0FA] opacity-70" />
             <Image
               className="z-10 w-full object-cover"
@@ -188,10 +189,10 @@ export default function DisplayPage() {
               height={500}
             />
           </div>
-          <div className="max-h-full max-w-[25%] p-0 rounded-2xl overflow-hidden">
+          <div className="w-[45%] h-full p-0 rounded-2xl overflow-hidden">
             {video && (
               <video
-              src={`${video}?cacheBust=${Date.now()}`} // letakkan file di public/videos/display.mp4
+                src={video} // letakkan file di public/videos/display.mp4
                 autoPlay
                 muted
                 loop
@@ -201,17 +202,17 @@ export default function DisplayPage() {
             )}
           </div>
           {/* Right (Agenda) */}
-
-          <div className="flex flex-col text-black rounded-lg overflow-hidden">
+          {/* 
+          <div className="flex h-full flex-col text-black rounded-lg overflow-hidden">
             <Carousel
-              className="w-full max-w-xs "
+              className="w-full max-w-xs max-h-full "
               plugins={[plugin.current]}
             >
-              <CarouselContent className="flex items-center">
+              <CarouselContent className="flex max-h-full">
                 {Array.isArray(display.content) &&
                   display.content.map((val, index) => (
-                    <CarouselItem key={index} className="max-h-[450px] overflow-hidden">
-                      <div className="w-full max-h-full p-6 flex flex-col gap-6 justify-center rounded-lg bg-white text-start">
+                    <CarouselItem key={index} className="max-h-full overflow-hidden">
+                      <div className="w-full h-full p-6 flex flex-col gap-6 rounded-lg bg-white text-start">
                         <h2 className="font-bold text-lg text-center">{val.key}</h2>
                         <h2 className="text-lg overflow-hidden">{val.value}</h2>
                       </div>
@@ -227,9 +228,9 @@ export default function DisplayPage() {
                 <AnimatedNumber value={antrian} />
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <Card className="w-[15%] p-3 bg-[#E6F0FA] flex justify-center items-center bg-[url('/siger.png')] relative bg-center bg-repeat bg-size-[60px] ">
+          <Card className="w-[25%] h-full p-3 bg-[#E6F0FA] flex justify-center items-center bg-[url('/siger.png')] relative bg-center bg-repeat bg-size-[60px] ">
             <div className="absolute inset-0  bg-[#E6F0FA] opacity-70" />
             <Image
               className="z-10 w-full object-cover"
@@ -242,23 +243,59 @@ export default function DisplayPage() {
         </div>
         {/* Left (Image) */}
 
-
-        <Card className="col-span-full max-h-70 overflow-hidden h-full p-4">
-          <CardContent className="p-0">
-            <AntrianTable
-              rows={queues}
-              isLoading={false}
-              refetch={fetchQueues}
-              isHeader={false}
-            />
-          </CardContent>
-        </Card>
-      </main>
-
-      {/* RUNNING TEXT */}
-      <footer className="bg-black py-2 overflow-hidden border-t border-gray-700 mt-auto">
+        <div className="flex h-[30%] mx-16 mb-auto">
+          <Card className="w-1/2 overflow-hidden h-full bg-white p-4">
+            <CardContent className="p-0">
+              <AntrianTable
+                rows={queues}
+                isLoading={false}
+                refetch={fetchQueues}
+                isHeader={false}
+              />
+            </CardContent>
+          </Card>
+          <div className="w-1/2 h-full flex justify-center items-center  gap-10">
+            {/* <div className="w-1/2 flex h-full justify-center items-center flex-col text-black rounded-lg overflow-hidden"> */}
+              <Carousel
+                className="w-[45%] h-full flex text-black rounded-lg overflow-hidden"
+                plugins={[plugin.current]}
+              >
+                <CarouselContent className="flex h-full items-center">
+                  {Array.isArray(display.content) &&
+                    display.content.map((val, index) => (
+                      <CarouselItem
+                        key={index}
+                        className="h-full"
+                      >
+                        <div className="w-full h-full overflow-hidden max-h-full p-6 flex flex-col gap-6 rounded-lg bg-white text-start">
+                          <h2 className="font-bold text-[2vw] text-center">
+                            {val.key}
+                          </h2>
+                          <h2 className="text-[1vw] overflow-hidden">
+                            {val.value}
+                          </h2>
+                        </div>
+                      </CarouselItem>
+                    ))}
+                </CarouselContent>
+              </Carousel>
+            {/* </div> */}
+            <div className="w-[45%] h-full">
+              <div className="flex flex-col py-5 gap-3 items-center h-full bg-white text-black rounded-lg">
+                <h2 className="font-bold text-[2vw] text-center">
+                  Nomor Antrian
+                </h2>
+                <div className="h-[80%] flex items-center text-[10vw] font-bold ">
+                  <AnimatedNumber value={antrian} />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      <footer className="bg-black py-2 overflow-hidden border-t border-gray-700 mt-36">
         <motion.div
-          className="whitespace-nowrap text-lg text-yellow-400 font-semibold"
+          className="whitespace-nowrap text-[1.5vw] text-yellow-400 font-semibold"
           animate={{ x: ["100%", "-100%"] }}
           transition={{
             x: { repeat: Infinity, duration: 40, ease: "linear" },
@@ -267,6 +304,7 @@ export default function DisplayPage() {
           {display.runningText}
         </motion.div>
       </footer>
+      </main>
     </div>
   );
 }

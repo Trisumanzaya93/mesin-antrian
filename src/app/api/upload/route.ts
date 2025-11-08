@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
     // 🧩 Dapatkan ekstensi asli (misal: .mp4)
     const ext = path.extname(file.name);
-    const filename = `video${ext}`; // simpan dengan nama tetap "video"
+    const filename = `video${Date.now()}${ext}`; // simpan dengan nama tetap "video"
 
     // 🔄 Simpan file baru
     const bytes = await file.arrayBuffer();

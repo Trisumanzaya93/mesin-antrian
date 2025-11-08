@@ -169,14 +169,14 @@ export default function AntrianTable({ rows, isLoading, refetch ,isHeader = true
           <table className="w-full text-left table-auto">
             <thead className="bg-[#E6F0FA]">
               <tr>
-                <th className="px-4 py-3 text-sm font-medium">No</th>
-                <th className="px-4 py-3 text-sm font-medium">Nomor Antrian</th>
-                <th className="px-4 py-3 text-sm font-medium">
+                <th className="px-4 py-3 text-[1vw] font-medium">No</th>
+                <th className="px-4 py-3 text-[1vw] font-medium">Nomor Antrian</th>
+                <th className="px-4 py-3 text-[1vw] font-medium">
                   Jenis Pelayanan
                 </th>
-                <th className="px-4 py-3 text-sm font-medium">Nama Pemohon</th>
-                <th className="px-4 py-3 text-sm font-medium">Status</th>
-                {isHeader && <th className="px-4 py-3 text-sm font-medium">Aksi</th>}
+                <th className="px-4 py-3 text-[1vw] font-medium">Nama Pemohon</th>
+                <th className="px-4 py-3 text-[1vw] font-medium">Status</th>
+                {isHeader && <th className="px-4 py-3 text-[1vw] font-medium">Aksi</th>}
               </tr>
             </thead>
             <tbody>
@@ -184,7 +184,7 @@ export default function AntrianTable({ rows, isLoading, refetch ,isHeader = true
                 <tr>
                   <td
                     colSpan={6}
-                    className="px-4 py-6 text-center text-sm text-slate-500"
+                    className="px-4 py-6 text-center text-[1vw] text-slate-500"
                   >
                     Tidak ada data
                   </td>
@@ -195,7 +195,7 @@ export default function AntrianTable({ rows, isLoading, refetch ,isHeader = true
                 <tr>
                   <td
                     colSpan={6}
-                    className="px-4 py-6 text-center text-sm text-slate-500"
+                    className="px-4 py-6 text-center text-[1vw] text-slate-500"
                   >
                     <Skeleton className="h-10 w-full mb-4"/>
                     <Skeleton className="h-10 w-full mb-4"/>
@@ -214,29 +214,29 @@ export default function AntrianTable({ rows, isLoading, refetch ,isHeader = true
                   transition={{ duration: 0.18 }}
                   className="border-b last:border-0 even:bg-white"
                 >
-                  <td className="px-4 py-3 align-middle text-sm">{idx + 1}</td>
-                  <td className="px-4 py-3 align-middle text-sm font-medium">
+                  <td className="px-4 py-3 align-middle text-[1vw]">{idx + 1}</td>
+                  <td className="px-4 py-3 align-middle text-[1vw] font-medium">
                     {row.nomorAntrian}
                   </td>
-                  <td className="px-4 py-3 align-middle text-sm">
+                  <td className="px-4 py-3 align-middle text-[1vw]">
                     {row.jenisPelayanan}
                   </td>
-                  <td className="px-4 py-3 align-middle text-sm">
+                  <td className="px-4 py-3 align-middle text-[1vw]">
                     {row.namaPemohon}
                   </td>
-                  <td className="px-4 py-3 align-middle text-sm text-center">
-                    <div className={`w-20 text-center rounded-full ${statusToColor(
+                  <td className="px-4 py-3 align-middle text-[1vw] text-center">
+                    <div className={`w-full text-center rounded-full ${statusToColor(
                         row.status
                       )}`}>
                     <p
-                      className={`inline-flex items-center gap-2 px-2 py-1   text-xs font-medium `}
+                      className={`inline-flex items-center gap-2 px-2 py-1   text-[1vw] font-medium `}
                     >
                       {row.status}
                     </p>
 
                     </div>
                   </td>
-                  {isHeader && <td className="px-4 py-3 align-middle text-sm">
+                  {isHeader && <td className="px-4 py-3 align-middle text-[1vw]">
                     {row.status === "Proses" && (
                       <div className="flex items-center gap-2">
                         <Button

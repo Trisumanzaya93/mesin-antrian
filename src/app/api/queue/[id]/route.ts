@@ -4,18 +4,19 @@ import { successResponse, errorResponse } from "@/lib/response";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> } // ⬅️ perhatikan ini
 ) {
   try {
     const body = await req.json();
     const { status } = body;
+    const { id } = await context.params;
 
     if (!status) {
       return errorResponse("Status wajib diisi", 400, null);
     }
 
     const updated = await prisma.queue.update({
-      where: { id: Number(params.id) },
+      where: { id: Number(id) },
       data: { status },
     });
 

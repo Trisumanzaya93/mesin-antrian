@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-interface ApiResponse<T = any> {
+interface ApiResponse<T = object | string> {
   success: boolean;
   message: string;
   data?: T;

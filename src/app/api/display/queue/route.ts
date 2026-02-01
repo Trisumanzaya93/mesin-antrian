@@ -8,7 +8,7 @@ export async function GET() {
     const queues = await prisma.queue.findMany({
       where: {
         status: {
-          in: ["siap", "proses"], // hanya dua status ini
+          in: ["Siap", "Proses"], // hanya dua status ini
         },
         createdAt: {
           gte: new Date(new Date().setHours(0, 0, 0, 0)), // hari ini saja

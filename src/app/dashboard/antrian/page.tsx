@@ -51,7 +51,7 @@ export default function Page() {
   const fetchQueues = async (): Promise<void> => {
     try {
       setLoading(true);
-      const res = await fetch("/api/queue");
+      const res = await fetch("/api/queue",{ cache: "no-store" });
       const json = await res.json();
 
       if (!json.success)
@@ -59,8 +59,8 @@ export default function Page() {
 
       setQueues(json.data);
       setError(null);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError((err as Error).message);
     } finally {
       setLoading(false);
     }
@@ -78,6 +78,7 @@ export default function Page() {
       const res = await fetch("/api/queue", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        cache: "no-store",
         body: JSON.stringify({
           namaPemohon,
           jenisPelayanan,
@@ -91,8 +92,8 @@ export default function Page() {
       setNamaPemohon("");
       setJenisPelayanan("");
       fetchQueues();
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err: unknown) {
+      toast.error((err as Error).message);
     } finally {
       setLoading(false);
     }

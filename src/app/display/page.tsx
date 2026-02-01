@@ -83,8 +83,8 @@ export default function DisplayPage() {
       setQueues(json.data);
       getAntrian(json.data);
       setError(null);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError((err as Error).message);
     } finally {
     }
   };
@@ -103,8 +103,8 @@ export default function DisplayPage() {
       setVideo(json.data.url);
       setDisplay(data.data);
       setError(null);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError((err as Error).message);
     } finally {
     }
   };
@@ -254,10 +254,10 @@ export default function DisplayPage() {
               />
             </CardContent>
           </Card>
-          <div className="w-1/2 h-full flex justify-center items-center  gap-10">
+          <div className="w-1/2 h-full flex items-center">
             {/* <div className="w-1/2 flex h-full justify-center items-center flex-col text-black rounded-lg overflow-hidden"> */}
               <Carousel
-                className="w-[45%] h-full flex text-black rounded-lg overflow-hidden"
+                className="h-full mx-20 flex text-black rounded-lg overflow-hidden"
                 plugins={[plugin.current]}
               >
                 <CarouselContent className="flex h-full items-center">
@@ -268,10 +268,12 @@ export default function DisplayPage() {
                         className="h-full"
                       >
                         <div className="w-full h-full overflow-hidden max-h-full p-6 flex flex-col gap-6 rounded-lg bg-white text-start">
-                          <h2 className="font-bold text-[2vw] text-center">
+                          <div className="w-full py-5 bg-[#E6F0FA] mb-5">
+                          <h2 className="font-bold text-[1.5vw] text-center">
                             {val.key}
                           </h2>
-                          <h2 className="text-[1vw] overflow-hidden">
+                          </div>
+                          <h2 className="text-[1.5vw] overflow-hidden">
                             {val.value}
                           </h2>
                         </div>
@@ -280,11 +282,13 @@ export default function DisplayPage() {
                 </CarouselContent>
               </Carousel>
             {/* </div> */}
-            <div className="w-[45%] h-full">
-              <div className="flex flex-col py-5 gap-3 items-center h-full bg-white text-black rounded-lg">
-                <h2 className="font-bold text-[2vw] text-center">
-                  Nomor Antrian
-                </h2>
+            <div className="w-[45%] h-full bg-red-500 p-0">
+              <div className="flex flex-col p-5 items-center h-full bg-white text-black rounded-lg">
+                <div className="w-full py-5 bg-[#E6F0FA] mb-5">
+                          <h2 className="font-bold text-[1.5vw] text-center">
+                            Nomor Antrian
+                          </h2>
+                          </div>
                 <div className="h-[80%] flex items-center text-[10vw] font-bold ">
                   <AnimatedNumber value={antrian} />
                 </div>

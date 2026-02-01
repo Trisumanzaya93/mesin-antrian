@@ -48,18 +48,11 @@ export async function POST(req: Request) {
 
 export async function GET() {
   try {
-    // ambil waktu saat ini (local)
-    const now = new Date();
-
-    // hitung awal hari (jam 00:00)
-    const startOfDay = new Date(now);
-    startOfDay.setHours(0, 0, 0, 0);
-
     // ambil semua antrian yang dibuat hari ini
     const queues = await prisma.queue.findMany({
       where: {
         status: {
-          in: ["siap", "proses"], // hanya dua status ini
+          in: ["Siap", "Proses","Selesai"], // hanya dua status ini
         },
         createdAt: {
           gte: new Date(new Date().setHours(0, 0, 0, 0)), // hari ini saja
@@ -74,7 +67,7 @@ export async function GET() {
         },
       ],
     });
-
+    
     return successResponse(queues, "List antrian hari ini");
   } catch (error) {
     console.error(error);
